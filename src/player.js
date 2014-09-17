@@ -54,7 +54,7 @@ function Player(Game) {
         // shooting logic primary
         if(this.cooldownPrimary < this.primary.firerate)
             this.cooldownPrimary += delta;
-        else //if( Game.input.mouse.button == 1 )
+        else if( Game.input.mouse.button == 1 )
         {
             this.cooldownPrimary = 0;
             this.shoot(Game, bullets, this.primary);
@@ -63,7 +63,7 @@ function Player(Game) {
         // shooting logic secondary
         if(this.cooldownSecondary < this.secondary.firerate)
             this.cooldownSecondary += delta;
-        else// if( Game.input.mouse.button == 3 )
+        else if( Game.input.mouse.button == 3 )
         {
             this.cooldownSecondary = 0;
             this.shoot(Game, bullets, this.secondary);
@@ -81,21 +81,23 @@ function Player(Game) {
     this.shoot = function (Game, bullets, flyweight) {
         for(var i = 0; i < flyweight.bullets; ++i) {
             var radians = (Math.random() * (flyweight.range*2)-flyweight.range) * (Math.PI/180);
-            var dir = {x: Math.cos(this.sprite.rotation + radians), y: Math.sin(this.sprite.rotation + radians)};
+            var dir = {x: 0, y: 0};
             var pos = this.position;
+            
+            dir.x = Math.cos(this.sprite.rotation + radians);
+            dir.y = Math.sin(this.sprite.rotation + radians);
             pos.x += dir.x;
             pos.y += dir.y;
             
-            var bullet = CreateBullet( Game, flyweight, pos, dir ) ;
-            bullets.push(bullet);
+            bullets.push(CreateBullet( Game, flyweight, pos, dir ));
         }
-    }
+    };
     
     this.addScore = function (amount) {
         if(this.health > 0){
             this.score += amount;
         }
-    }
+    };
 }
 
 function CreatePlayer(Game) {

@@ -4,20 +4,21 @@ function Bullet() {
     this.position = { x: 0, y: 0 };
     this.sprite = null;
     this.flagHit = false;
-    this.flyweight = new BulletFlyweight();
+    this.flyweight = null;
     this.damage = 0;
+    this.radius = 0;
     
     this.update = function(Game) {
         // Update position
         var delta = Game.time.elapsed * 0.001;
-        this.position.x += this.direction.x * this.speed * delta
-        this.position.y += this.direction.y * this.speed * delta;
+        this.position.x += this.direction.x * this.flyweight.speed * delta
+        this.position.y += this.direction.y * this.flyweight.speed * delta;
         this.sprite.x = this.position.x;
         this.sprite.y = this.position.y;
         
         // Check if out of bounds
-        if(this.position.x + this.radius < 0 || this.position.x - this.radius > screenWidth ||
-           this.position.y + this.radius < 0 || this.position.y - this.radius > screenHeight ||
+        if(this.position.x + this.flyweight.radius < 0 || this.position.x - this.flyweight.radius > screenWidth ||
+           this.position.y + this.flyweight.radius < 0 || this.position.y - this.flyweight.radius > screenHeight ||
            this.flagHit == true) {
                BULLET_COUNT--;
             return false;
@@ -52,7 +53,8 @@ function CreateBullet(Game, flyweight, position, dir) {
     bullet.sprite = Game.add.sprite(position.x, position.y, flyweight.bulletTag);
     bullet.sprite.rotation = Math.atan2(dir.y, dir.x);
     bullet.sprite.anchor.setTo(0.5, 0.5);
-    bullet.damage = Math.random() * (flyweight.damageMax-flyweight.damageMin) + flyweight.damageMin;
+    bullet.damage = Math.round(Math.random() * (flyweight.damageMax-flyweight.damageMin) + flyweight.damageMin);
+    bullet.radius = flyweight.radius;
     
     BULLET_COUNT++;
     return bullet;

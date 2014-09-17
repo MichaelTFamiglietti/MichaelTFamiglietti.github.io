@@ -43,7 +43,7 @@ function Enemy(Game) {
         else
         {
             this.cooldownPrimary = 0;
-            this.shoot(Game, this.primary);
+            this.shoot(Game, bullets, this.primary);
         }
         
         // Look at player
@@ -52,10 +52,10 @@ function Enemy(Game) {
         
         // check if being hit
         if(this.gettingHit){
-            this.sprite.scale.x = 1.2;
-            this.sprite.scale.y = 1.2;
-            this.gettingHitTimer -= delta;
-            if(this.gettingHitTimer <= 0){
+            this.sprite.scale.x = 1.2 - this.gettingHitTimer;
+            this.sprite.scale.y = 1.2 - this.gettingHitTimer;
+            this.gettingHitTimer += delta;
+            if(this.gettingHitTimer >= 0.1){
                 this.gettingHitTimer = 0;
                 this.gettingHit = false;
             }
@@ -75,17 +75,19 @@ function Enemy(Game) {
         }
         return true;
     };
-
-    this.shoot = function (Game, flyweight) {
+    
+    this.shoot = function (Game, bullets, flyweight) {
         for(var i = 0; i < flyweight.bullets; ++i) {
             var radians = (Math.random() * (flyweight.range*2)-flyweight.range) * (Math.PI/180);
-            var dir = {x: Math.cos(this.sprite.rotation + radians), y: Math.sin(this.sprite.rotation + radians)};
+            var dir = {x: 0, y: 0};
             var pos = this.position;
+            
+            dir.x = Math.cos(this.sprite.rotation + radians);
+            dir.y = Math.sin(this.sprite.rotation + radians);
             pos.x += dir.x;
             pos.y += dir.y;
             
-            var bullet = CreateBullet( Game, flyweight, pos, dir ) ;
-            bullets.push(bullet);
+            bullets.push(CreateBullet( Game, flyweight, pos, dir ));
         }
     }
 }

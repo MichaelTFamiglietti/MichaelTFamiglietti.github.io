@@ -19,9 +19,9 @@ function preload() {
     load();
     
     // setup flyweights
-    BULLET_ENEMY_WEAK               = new BulletFlyweight(5, 5, 10, goldenRatio * .5, 250, 1, 2, "BulletEnemyWeak", "bulletEnemy" );
-    BULLET_PLAYER_HIGH_PRECISION    = new BulletFlyweight(10, 40, 55, goldenRatio * .2, 1000, 1, 0, "BulletPlayerHighPrecision", "bulletPlayer"  );
-    BULLET_PLAYER_SPREAD_SHOT       = new BulletFlyweight(10, 20, 30, goldenRatio * .3, 300, 10, 4, "BulletPlayerSpreadShot", "bulletPlayer"  );
+    BULLET_ENEMY_WEAK               = new BulletFlyweight(5, 5, 10, .8, 250, 1, 2, "BulletEnemyWeak", "bulletEnemy" );
+    BULLET_PLAYER_HIGH_PRECISION    = new BulletFlyweight(10, 40, 55, .05, 1000, 1, 0, "BulletPlayerHighPrecision", "bulletPlayer"  );
+    BULLET_PLAYER_SPREAD_SHOT       = new BulletFlyweight(10, 20, 30, .3, 300, 10, 4, "BulletPlayerSpreadShot", "bulletPlayer"  );
     
 }
 
@@ -42,6 +42,7 @@ function colliding(entity1, entity2) {
 }
 
 function update() {
+    
     // Update player
     player.update(game, bullets);
     
@@ -83,7 +84,7 @@ function update() {
         }
         else {
             // CHECK COLLISION
-            if(bullets[i].tag == "enemy") {
+            if(bullets[i].flyweight.bulletTag == "bulletEnemy") {
                 if( colliding(bullets[i], player) ) {
                     if(player.shield > 0) {
                         player.shield -= bullets[i].damage;
@@ -100,7 +101,7 @@ function update() {
                     bullets[i].flagHit = true;
                 }
             }
-            else if(bullets[i].tag == "player") {
+            else if(bullets[i].flyweight.bulletTag == "bulletPlayer") {
                 for(var j = 0; j < enemies.length; ++j)
                 {
                     if( colliding(bullets[i], enemies[j]) ) {
