@@ -8,10 +8,13 @@ var BULLET_PLAYER_HIGH_PRECISION = null;
 var BULLET_PLAYER_SPREAD_SHOT = null;
 var BULLET_PLAYER_DOUBLE_SHOT = null;
 var BULLET_PLAYER_SEMIWIDE_SHOT = null;
+var BULLET_PLAYER_360_SHOT = null;
 var BULLET_PLAYER_WIDE_SHOT = null;
 var BULLET_PLAYER_VORTEX = null;
 var BULLET_PLAYER_ZAP = null;
 var BULLET_PLAYER_SPRAY = null;
+var GunStrings = ["HighPrecision", "SpreadShot", "DoubleShot", "SemiWideShot", "360Shot", "WideShot", "Vortex", "Zap", "Spray"];
+var Guns = [];
 
 var dout = null;
 var player = null;
@@ -27,6 +30,9 @@ var spawnEnemyCooldown = 0;
 var deltaTime = 0;
 var loseText = null;
 
+var playerWeaponInt1 = 0, playerWeaponInt2 = 1;
+var playerWeapon1 = null, playerWeapon2 = null;
+
 function preload() {
     dout = document.getElementById('debug');
     load();
@@ -39,9 +45,12 @@ function preload() {
     BULLET_PLAYER_SEMIWIDE_SHOT     = new BulletFlyweight(10, 20, 30,  1, 500, 25, 45, 0, 5, "BulletPlayerSemiWideShot", "bulletPlayer");
     BULLET_PLAYER_WIDE_SHOT         = new BulletFlyweight(10, 20, 30,  1, 500, 50, 90, 0, 5, "BulletPlayerWideShot", "bulletPlayer");
     BULLET_PLAYER_360_SHOT          = new BulletFlyweight(10, 30, 40, 1.15, 300, 100, 180, 0, 4, "BulletPlayer360Shot", "bulletPlayer");
-    BULLET_PLAYER_VORTEX            = new BulletFlyweight(10, 5, 15, .03, 500, 2, 0, 25, 5, "BulletPlayerVortex", "bulletPlayer");
-    BULLET_PLAYER_ZAP               = new BulletFlyweight(10, 8, 12, .1, 900, 2, 0, 50, 5, "BulletPlayerZap", "bulletPlayer");
+    BULLET_PLAYER_VORTEX            = new BulletFlyweight(10, 5, 10, .03, 500, 2, 0, 25, 5, "BulletPlayerVortex", "bulletPlayer");
+    BULLET_PLAYER_ZAP               = new BulletFlyweight(10, 15, 25, .1, 900, 2, 0, 50, 5, "BulletPlayerZap", "bulletPlayer");
     BULLET_PLAYER_SPRAY             = new BulletFlyweight(10, 20, 35, .07, 400, 4, 30, 0, 8, "BulletPlayerSpray", "bulletPlayer" );
+    Guns = [BULLET_PLAYER_HIGH_PRECISION, BULLET_PLAYER_SPREAD_SHOT, 
+            BULLET_PLAYER_DOUBLE_SHOT, BULLET_PLAYER_SEMIWIDE_SHOT, BULLET_PLAYER_WIDE_SHOT, 
+            BULLET_PLAYER_360_SHOT, BULLET_PLAYER_VORTEX, BULLET_PLAYER_ZAP, BULLET_PLAYER_SPRAY ];
 }
 
 function create() {
@@ -71,6 +80,8 @@ function update() {
         }
     }
     else {
+        UpdateGunUI();
+        
         deltaTime = game.time.elapsed * .001;
         // Update player
         player.update(game, bullets);
@@ -163,6 +174,53 @@ function UpdateGameMode() {
             else {
                 spawnEnemyCooldown -= deltaTime;   
             }
+        }
+    }
+}
+
+var switchFrames = true;
+var wasDown = false;
+function UpdateGunUI() {
+    if(switchFrames) {
+        if(playerWeapon1 != null) {
+            playerWeapon1.destroy();
+        }
+        if(playerWeapon2 != null){
+            playerWeapon2.destroy();   
+        }
+        playerWeapon1 = game.add.sprite(game.world.width - 64, game.world.height - 128, GunStrings[playerWeaponInt1]);
+        playerWeapon2 = game.add.sprite(game.world.width - 64, game.world.height - 64, GunStrings[playerWeaponInt2]);
+        player.primary = Guns[playerWeaponInt1];
+        player.secondary = Guns[playerWeaponInt2];
+        switchFrames = false;
+    }
+    else {
+        if(!wasDown && game.input.keyboard.isDown(Phaser.Keyboard.Q)) {
+            wasDown = true;
+            switchFrames = true;
+            playerWeaponInt1++;
+            if(playerWeaponInt1 == playerWeaponInt2){
+                playerWeaponInt1++;
+            }
+            if(playerWeaponInt1 >= GunStrings.length) {
+                if(playerWeaponInt2 == 0) { playerWeaponInt1 = 1; }
+                else { playerWeaponInt1 = 0; }
+            }
+        }
+        if(!wasDown && game.input.keyboard.isDown(Phaser.Keyboard.E) ) {
+            wasDown = true;
+            switchFrames = true;
+            playerWeaponInt2++;
+            if(playerWeaponInt2 == playerWeaponInt1){
+                playerWeaponInt2++;
+            }
+            if(playerWeaponInt2 >= GunStrings.length) {
+                if(playerWeaponInt1 == 0) { playerWeaponInt2 = 1; }
+                else { playerWeaponInt2 = 0; }
+            }
+        }
+        if(wasDown && !game.input.keyboard.isDown(Phaser.Keyboard.Q) && !game.input.keyboard.isDown(Phaser.Keyboard.E) ) {
+            wasDown = false;
         }
     }
 }

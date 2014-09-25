@@ -46,6 +46,7 @@
                         <p><br /><br /><br />
                             Controls: <br />
                             W A S D - Movement<br /><br />
+                            Q E - Switch Weapons<br /><br />
                             L - Click - Primary<br /><br />
                             R - Click - Secondary<br /><br />
                             Enter - Start Game
@@ -71,6 +72,10 @@
             game.load.image('enemy', 'res/Enemy.png');
             game.load.image('bulletPlayer', 'res/BulletPlayer.png');
             game.load.image('bulletEnemy', 'res/BulletEnemy.png');
+            
+            for(var i = 0; i < GunStrings.length; ++i) {
+                game.load.image(GunStrings[i], "res/Icons/GunIcon" + i + ".png");
+            }
         }
     </script>
 	
