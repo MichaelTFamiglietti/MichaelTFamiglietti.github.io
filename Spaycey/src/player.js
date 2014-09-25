@@ -19,18 +19,17 @@ function Player(Game) {
 
     this.update = function (Game, bullets) {
         // Key stuff
-        var delta = Game.time.elapsed * .001;
         if (Game.input.keyboard.isDown(Phaser.Keyboard.W)) {
-            this.position.y -= this.speed * delta;
+            this.position.y -= this.speed * deltaTime;
         }
         if (Game.input.keyboard.isDown(Phaser.Keyboard.S)) {
-            this.position.y += this.speed * delta;
+            this.position.y += this.speed * deltaTime;
         }
         if (Game.input.keyboard.isDown(Phaser.Keyboard.A)) {
-            this.position.x -= this.speed * delta;
+            this.position.x -= this.speed * deltaTime;
         }
         if (Game.input.keyboard.isDown(Phaser.Keyboard.D)) {
-            this.position.x += this.speed * delta;
+            this.position.x += this.speed * deltaTime;
         }
 
 		// off screen check
@@ -53,7 +52,7 @@ function Player(Game) {
         
         // shooting logic primary
         if(this.cooldownPrimary < this.primary.firerate)
-            this.cooldownPrimary += delta;
+            this.cooldownPrimary += deltaTime;
         else if( Game.input.mouse.button == 1 )
         {
             this.cooldownPrimary = 0;
@@ -62,7 +61,7 @@ function Player(Game) {
         
         // shooting logic secondary
         if(this.cooldownSecondary < this.secondary.firerate)
-            this.cooldownSecondary += delta;
+            this.cooldownSecondary += deltaTime;
         else if( Game.input.mouse.button == 3 )
         {
             this.cooldownSecondary = 0;
@@ -94,10 +93,22 @@ function Player(Game) {
     };
     
     this.addScore = function (amount) {
-        if(this.health > 0){
+        if(this.health > 0) {
             this.score += amount;
         }
+        if(this.health > 120) {
+            this.health = 120;
+        }
     };
+    
+    this.addShield = function(amount) {
+        if(this.health > 0) {
+            this.shield += amount;
+        }
+        if(this.shield > 120) {
+            this.shield = 120;
+        }
+    }
 }
 
 function CreatePlayer(Game) {
@@ -110,8 +121,8 @@ function CreatePlayer(Game) {
     player.speed = 500;
     player.health = 100;
     player.shield = 100;
-    player.primary = BULLET_PLAYER_HIGH_PRECISION;
-    player.secondary = BULLET_PLAYER_SPREAD_SHOT;
+    player.primary = BULLET_PLAYER_DOUBLE_SHOT;
+    player.secondary = BULLET_PLAYER_SPRAY;
     
     player.hudScore = Game.add.text(16, 16, "Score: " + player.score, { fontSize: '32px', fill: '#FFFFFF' });
     player.hudHealth = Game.add.text(16, 545, "Health: " + player.health, { fontSize: '32px', fill: '#AA1100' });

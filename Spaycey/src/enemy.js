@@ -10,6 +10,7 @@ function Enemy(Game) {
     this.health = 0;
     this.shield = 0;
     this.score = 0;
+    this.shieldBonus = 0;
     this.primary = null;
     
     this.gettingHit = false;
@@ -17,7 +18,7 @@ function Enemy(Game) {
 
     this.update = function (Game, player, bullets) {
         
-        var delta = Game.time.elapsed * .001;
+        this.travel();
         
 		// off screen check
         if(this.position.x < 0)
@@ -39,7 +40,7 @@ function Enemy(Game) {
 
         // shooting logic primary
         if(this.cooldownPrimary < this.primary.firerate)
-            this.cooldownPrimary += delta;
+            this.cooldownPrimary += deltaTime;
         else
         {
             this.cooldownPrimary = 0;
@@ -54,7 +55,7 @@ function Enemy(Game) {
         if(this.gettingHit){
             this.sprite.scale.x = 1.2 - this.gettingHitTimer;
             this.sprite.scale.y = 1.2 - this.gettingHitTimer;
-            this.gettingHitTimer += delta;
+            this.gettingHitTimer += deltaTime;
             if(this.gettingHitTimer >= 0.1){
                 this.gettingHitTimer = 0;
                 this.gettingHit = false;
@@ -67,14 +68,17 @@ function Enemy(Game) {
         // check if dead
         if(this.health <= 0)
         {
-            if(player.health > 0) {
-                player.addScore(this.score);
-            }
+            player.addScore(this.score);
+            player.addShield(this.shieldBonus);
             ENEMY_COUNT--;
             return false;
         }
         return true;
     };
+    
+    this.travel = function() {
+        
+    }
     
     this.shoot = function (Game, bullets, flyweight) {
         for(var i = 0; i < flyweight.bullets; ++i) {
@@ -109,6 +113,7 @@ function CreateEnemyWeak(Game, playerPos) {
     enemy.health = 100;
     enemy.score = 50;
     enemy.primary = BULLET_ENEMY_WEAK;
+    enemy.shieldBonus = 1;
     
     ENEMY_COUNT++;
     return enemy;

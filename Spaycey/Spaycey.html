@@ -4,8 +4,8 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="../stylesheets/pygment_trac.css" media="screen">
     
 	<script src="lib/phaser.min.js" type="text/javascript"></script>
 	<script src="src/enemy.js" type="text/javascript"></script>
@@ -48,7 +48,7 @@
                             W A S D - Movement<br /><br />
                             L - Click - Primary<br /><br />
                             R - Click - Secondary<br /><br />
-                            Spacebar - Start Game
+                            Enter - Start Game
                         </p>
                     </td>
                 </tr>
@@ -61,12 +61,12 @@
     
     <script>
         function load() {
-            game.canvas.onClick = function (e) { e.preventDefault(); }
+            //game.canvas.onClick = function (e) { e.preventDefault(); }
             game.canvas.oncontextmenu = function (e) { e.preventDefault(); }
             document.oncontextmenu = function (e) { e.preventDefault(); };
-            document.getElementById("debug").onClick = function (e) { e.preventDefault(); };
+            //document.getElementById("debug").onClick = function (e) { e.preventDefault(); };
             document.getElementById("debug").oncontextmenu = function (e) { e.preventDefault(); };
-            document.onClick= function (e) { e.preventDefault(); };
+            //document.onClick= function (e) { e.preventDefault(); };
             game.load.image('player', 'res/Player.png');
             game.load.image('enemy', 'res/Enemy.png');
             game.load.image('bulletPlayer', 'res/BulletPlayer.png');
