@@ -13,7 +13,8 @@ var BULLET_PLAYER_WIDE_SHOT = null;
 var BULLET_PLAYER_VORTEX = null;
 var BULLET_PLAYER_ZAP = null;
 var BULLET_PLAYER_SPRAY = null;
-var GunStrings = ["HighPrecision", "SpreadShot", "DoubleShot", "SemiWideShot", "360Shot", "WideShot", "Vortex", "Zap", "Spray"];
+var BULLET_PLAYER_SWARM = null;
+var GunStrings = ["HighPrecision", "SpreadShot", "DoubleShot", "SemiWideShot", "360Shot", "WideShot", "Vortex", "Zap", "Spray", "Swarm"];
 var Guns = [];
 
 var dout = null;
@@ -48,9 +49,10 @@ function preload() {
     BULLET_PLAYER_VORTEX            = new BulletFlyweight(10, 5, 10, .03, 500, 2, 0, 25, 5, "BulletPlayerVortex", "bulletPlayer");
     BULLET_PLAYER_ZAP               = new BulletFlyweight(10, 15, 25, .1, 900, 2, 0, 50, 5, "BulletPlayerZap", "bulletPlayer");
     BULLET_PLAYER_SPRAY             = new BulletFlyweight(10, 20, 35, .07, 400, 4, 30, 0, 8, "BulletPlayerSpray", "bulletPlayer" );
+    BULLET_PLAYER_SWARM             = new BulletFlyweight(10, 20, 40, .1, 600, 6, 360, 20, 5, "BulletPlayerSwarm", "bulletPlayer" );
     Guns = [BULLET_PLAYER_HIGH_PRECISION, BULLET_PLAYER_SPREAD_SHOT, 
             BULLET_PLAYER_DOUBLE_SHOT, BULLET_PLAYER_SEMIWIDE_SHOT, BULLET_PLAYER_WIDE_SHOT, 
-            BULLET_PLAYER_360_SHOT, BULLET_PLAYER_VORTEX, BULLET_PLAYER_ZAP, BULLET_PLAYER_SPRAY ];
+            BULLET_PLAYER_360_SHOT, BULLET_PLAYER_VORTEX, BULLET_PLAYER_ZAP, BULLET_PLAYER_SPRAY, BULLET_PLAYER_SWARM ];
 }
 
 function create() {

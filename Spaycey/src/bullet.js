@@ -9,8 +9,14 @@ function Bullet() {
     this.radius = 0;
     this.vortexAmt = 0;
     this.vortexBool = false;
+    this.swarmTime = 0;
+    this.swarmLife = 0;
     
     this.update = function() {
+        if(this.flyweight.tag == BULLET_PLAYER_SWARM.tag) {
+            this.swarm();
+        }
+        
         if(this.flyweight.wobble > 0) {
             this.vortex();
         }
@@ -22,9 +28,8 @@ function Bullet() {
         this.sprite.y = this.position.y;
         
         // Check if out of bounds
-        if(this.position.x + this.flyweight.radius < -50 || this.position.x - this.flyweight.radius > screenWidth  + 50||
-           this.position.y + this.flyweight.radius < -50 || this.position.y - this.flyweight.radius > screenHeight + 50||
-           this.flagHit == true) {
+        if(this.flagHit == true||this.position.x + this.flyweight.radius < -50 || this.position.x - this.flyweight.radius > screenWidth  + 50||
+           this.position.y + this.flyweight.radius < -50 || this.position.y - this.flyweight.radius > screenHeight + 50 ) {
             BULLET_COUNT--;
             return false;
         }
@@ -32,6 +37,22 @@ function Bullet() {
            return true;
         }
     };
+    this.swarm = function() {
+    this.sprite.angle += Math.PI * deltaTime; 
+        this.swarmTime +=  deltaTime;
+        this.swarmLife -= deltaTime;
+        if(this.swarmTime >= .4) {
+            this.swarmTime = 0;
+        //    this.sprite.angle = 1;
+            var angle = Math.random * Math.Pi*2;
+      //      this.sprite.angle = angle;
+        //    this.direction.x = Math.cos(angle);
+       //     this.direction.y = Math.sin(angle);
+        }
+        if(this.swarmLife <= 0) {
+        //    this.flagHit = true;
+        }
+    }
     
     this.vortex = function() {
         var angle = Math.atan2(this.direction.y, this.direction.x);
@@ -46,13 +67,13 @@ function Bullet() {
         newDir.x = Math.cos(angle);
         newDir.y = Math.sin(angle);
         
-        var xInc = newDir.x * this.flyweight.speed/4* (this.flyweight.wobble * deltaTime)* deltaTime;
-        var yInc = newDir.y * this.flyweight.speed/4* (this.flyweight.wobble * deltaTime)* deltaTime;
+        var xInc = newDir.x * this.flyweight.speed/2* (this.flyweight.wobble/20)* deltaTime;
+        var yInc = newDir.y * this.flyweight.speed/2* (this.flyweight.wobble/20)* deltaTime;
         this.vortexAmt += Math.abs(xInc) + Math.abs(yInc);
         this.position.x += xInc;
         this.position.y += yInc;
         
-        if(this.vortexAmt > this.flyweight.wobble) {
+        if(this.vortexAmt > this.flyweight.wobble*2) {
             this.vortexAmt = 0;
             this.vortexBool = !this.vortexBool;
         }
@@ -89,6 +110,9 @@ function CreateBullet(Game, flyweight, position, dir) {
     bullet.radius = flyweight.radius;
     bullet.vortexBool = globalVortexBool;
     globalVortexBool = !globalVortexBool;
+    if(BULLET_PLAYER_SWARM.tag == flyweight.tag) {
+        bullet.swarmLife = Math.random() * 2 + 2;   
+    }
     
     BULLET_COUNT++;
     return bullet;
