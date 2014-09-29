@@ -41,22 +41,22 @@ function preload() {
     // setup flyweights
     BULLET_ENEMY_WEAK               = new BulletFlyweight(5, 5, 10, .8, 300, 1, 2, 0, 0, "BulletEnemyWeak", "bulletEnemy" );
     BULLET_PLAYER_HIGH_PRECISION    = new BulletFlyweight(10, 40, 55, .05, 1000, 1, 0, 0, 10, "BulletPlayerHighPrecision", "bulletPlayer"  );
-    BULLET_PLAYER_SPREAD_SHOT       = new BulletFlyweight(10, 20, 30, .3, 320, 10, 4, 0, 7, "BulletPlayerSpreadShot", "bulletPlayer"  );
-    BULLET_PLAYER_DOUBLE_SHOT       = new BulletFlyweight(12, 30, 45, .2, 700, 2, 4, 0, 6, "BulletPlayerDoubleShot", "bulletPlayer" );
-    BULLET_PLAYER_SEMIWIDE_SHOT     = new BulletFlyweight(10, 20, 30,  1, 500, 25, 45, 0, 5, "BulletPlayerSemiWideShot", "bulletPlayer");
-    BULLET_PLAYER_WIDE_SHOT         = new BulletFlyweight(10, 20, 30,  1, 500, 50, 90, 0, 5, "BulletPlayerWideShot", "bulletPlayer");
+    BULLET_PLAYER_SPREAD_SHOT       = new BulletFlyweight(10, 20, 30, .33, 520, 10, 4, 0, 7, "BulletPlayerSpreadShot", "bulletPlayer"  );
+    BULLET_PLAYER_DOUBLE_SHOT       = new BulletFlyweight(12, 30, 45, .2, 750, 2, 4, 0, 6, "BulletPlayerDoubleShot", "bulletPlayer" );
+    BULLET_PLAYER_SEMIWIDE_SHOT     = new BulletFlyweight(10, 20, 30,  1, 500, 35, 45, 0, 5, "BulletPlayerSemiWideShot", "bulletPlayer");
+    BULLET_PLAYER_WIDE_SHOT         = new BulletFlyweight(10, 20, 30,  1, 500, 60, 90, 0, 5, "BulletPlayerWideShot", "bulletPlayer");
     BULLET_PLAYER_360_SHOT          = new BulletFlyweight(10, 30, 40, 1.15, 300, 100, 180, 0, 4, "BulletPlayer360Shot", "bulletPlayer");
     BULLET_PLAYER_VORTEX            = new BulletFlyweight(10, 5, 10, .03, 500, 2, 0, 25, 5, "BulletPlayerVortex", "bulletPlayer");
-    BULLET_PLAYER_ZAP               = new BulletFlyweight(10, 15, 25, .1, 900, 2, 0, 50, 5, "BulletPlayerZap", "bulletPlayer");
+    BULLET_PLAYER_ZAP               = new BulletFlyweight(10, 15, 25, .1, 900, 4, 0, 50, 5, "BulletPlayerZap", "bulletPlayer");
     BULLET_PLAYER_SPRAY             = new BulletFlyweight(10, 20, 35, .07, 400, 4, 30, 0, 8, "BulletPlayerSpray", "bulletPlayer" );
-    BULLET_PLAYER_SWARM             = new BulletFlyweight(10, 20, 40, .1, 600, 6, 360, 20, 5, "BulletPlayerSwarm", "bulletPlayer" );
+    BULLET_PLAYER_SWARM             = new BulletFlyweight(10, 20, 40, .1, 600, 10, 360, 20, 5, "BulletPlayerSwarm", "bulletPlayer" );
     Guns = [BULLET_PLAYER_HIGH_PRECISION, BULLET_PLAYER_SPREAD_SHOT, 
             BULLET_PLAYER_DOUBLE_SHOT, BULLET_PLAYER_SEMIWIDE_SHOT, BULLET_PLAYER_WIDE_SHOT, 
             BULLET_PLAYER_360_SHOT, BULLET_PLAYER_VORTEX, BULLET_PLAYER_ZAP, BULLET_PLAYER_SPRAY, BULLET_PLAYER_SWARM ];
 }
 
 function create() {
-    player = CreatePlayer(game);
+    player = CreatePlayer();
 }
 
 function colliding(entity1, entity2) {
@@ -74,7 +74,7 @@ function colliding(entity1, entity2) {
 function update() {
     if(player.health == 0) {
         if(loseText == null) {
-            player.update(game, bullets);
+            player.update();
             loseText = game.add.text(250, 100, "You Lose...\nPress Enter to Restart", { fontSize: '32px', fill: '#FFFFFF', align: 'center' });
         }
         if(game.input.keyboard.isDown(Phaser.Keyboard.ENTER)) {
@@ -86,11 +86,11 @@ function update() {
         
         deltaTime = game.time.elapsed * .001;
         // Update player
-        player.update(game, bullets);
+        player.update();
 
         // Update enemies
         for(var i = 0; i < enemies.length; ++i) {
-            if ( !enemies[i].update(game, player, bullets) ) {
+            if ( !enemies[i].update() ) {
                 enemies[i].sprite.destroy();
                 enemies.splice(i, 1);
                 i -= 1;
@@ -143,7 +143,7 @@ function update() {
     "<br />Bullets: " + BULLET_COUNT + 
     "<br />Enemies: " + ENEMY_COUNT;
 }
-
+var enemySpawnRate = 0.6;
 function UpdateGameMode() {
     // Create enemy on input
     if(roundStarted == false && game.input.keyboard.isDown(Phaser.Keyboard.ENTER) && enemiesToSpawn == 0) {
@@ -169,9 +169,9 @@ function UpdateGameMode() {
         }
         else {
             if(spawnEnemyCooldown <= 0) {
-                enemies.push(CreateEnemyWeak(game, player.position));
+                enemies.push(CreateEnemyWeak(player.position));
                 ++enemiesSpawned;
-                spawnEnemyCooldown = 0.6;
+                spawnEnemyCooldown = enemySpawnRate;
             }
             else {
                 spawnEnemyCooldown -= deltaTime;   
@@ -237,8 +237,12 @@ function NextLevel() {
     roundStarted = true;
     
     levelText.setText(level);
-    if(enemiesToSpawn == 10 || enemiesToSpawn == 100 || enemiesToSpawn == 1000 || enemiesToSpawn == 10000 || enemiesToSpawn == 100000) {
+    if(level == 10 || level == 100 || level == 1000 || level == 10000 || level == 100000) {
         levelText.x -= 16;
+    }
+
+    if (level == 5 || level == 10 || level == 15 || level == 20 || level == 25 || level == 30 || level == 40 || level == 50) {
+        enemySpawnRate -= .05;
     }
 }
 
@@ -260,6 +264,7 @@ function Restart() {
     loseText.destroy();
     loseText = null;
     level = 0;
+    enemySpawnRate = 0.6;
     levelText.x = 780;
     NextLevel();
 }

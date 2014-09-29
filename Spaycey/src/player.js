@@ -1,4 +1,4 @@
-function Player(Game) {
+function Player(game) {
     this.position = { x: 0, y: 0 };
     this.velocity = { x: 0, y: 0 };
     this.cooldownPrimary = 0;
@@ -17,55 +17,55 @@ function Player(Game) {
     this.hudHealth = null;
     this.hudShield = null;
 
-    this.update = function (Game, bullets) {
+    this.update = function () {
         // Key stuff
-        if (Game.input.keyboard.isDown(Phaser.Keyboard.W)) {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.W)) {
             this.position.y -= this.speed * deltaTime;
         }
-        if (Game.input.keyboard.isDown(Phaser.Keyboard.S)) {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.S)) {
             this.position.y += this.speed * deltaTime;
         }
-        if (Game.input.keyboard.isDown(Phaser.Keyboard.A)) {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             this.position.x -= this.speed * deltaTime;
         }
-        if (Game.input.keyboard.isDown(Phaser.Keyboard.D)) {
+        if (game.input.keyboard.isDown(Phaser.Keyboard.D)) {
             this.position.x += this.speed * deltaTime;
         }
 
 		// off screen check
         if(this.position.x < 0)
             this.position.x = 0;
-        if(this.position.x > Game.width)
-            this.position.x = Game.width;
+        if(this.position.x > game.width)
+            this.position.x = game.width;
         if(this.position.y < 0)
             this.position.y = 0;
-        if(this.position.y > Game.height)
-            this.position.y = Game.height;
+        if(this.position.y > game.height)
+            this.position.y = game.height;
 
 		// set sprite position
         this.sprite.x = this.position.x;
         this.sprite.y = this.position.y;
 
         // Mouse/Rotation Stuff
-        var mousePos = Game.input.mousePointer.position;
+        var mousePos = game.input.mousePointer.position;
         var relativeMousePos = { x: mousePos.x - this.sprite.x, y: mousePos.y - this.sprite.y };
         
         // shooting logic primary
         if(this.cooldownPrimary < this.primary.firerate)
             this.cooldownPrimary += deltaTime;
-        else if( Game.input.mouse.button == 1 )
+        else if( game.input.mouse.button == 1 )
         {
             this.cooldownPrimary = 0;
-            this.shoot(Game, bullets, this.primary);
+            this.shoot(this.primary);
         }
         
         // shooting logic secondary
         if(this.cooldownSecondary < this.secondary.firerate)
             this.cooldownSecondary += deltaTime;
-        else if( Game.input.mouse.button == 3 )
+        else if( game.input.mouse.button == 3 )
         {
             this.cooldownSecondary = 0;
-            this.shoot(Game, bullets, this.secondary);
+            this.shoot(this.secondary);
         }
         
         // look at cursor
@@ -77,7 +77,7 @@ function Player(Game) {
         this.hudShield.setText("Shield: " + this.shield);
     };
     
-    this.shoot = function (Game, bullets, flyweight) {
+    this.shoot = function (flyweight) {
         for(var i = 0; i < flyweight.bullets; ++i) {
             var radians = (Math.random() * (flyweight.range*2)-flyweight.range) * (Math.PI/180);
             var dir = {x: 0, y: 0};
@@ -88,7 +88,7 @@ function Player(Game) {
             pos.x += dir.x;
             pos.y += dir.y;
             
-            bullets.push(CreateBullet( Game, flyweight, pos, dir ));
+            bullets.push(CreateBullet( flyweight, pos, dir ));
         }
     };
     
@@ -111,10 +111,10 @@ function Player(Game) {
     }
 }
 
-function CreatePlayer(Game) {
-    var player = new Player(Game);
+function CreatePlayer() {
+    var player = new Player(game);
 
-    player.sprite = Game.add.sprite(Game.world.width / 2, Game.world.height / 2, 'player');
+    player.sprite = game.add.sprite(game.world.width / 2, game.world.height / 2, 'player');
     player.sprite.anchor.setTo(0.5, 0.5);
     player.position = player.sprite.position;
     player.radius = 15;
@@ -124,9 +124,9 @@ function CreatePlayer(Game) {
     player.primary = BULLET_PLAYER_DOUBLE_SHOT;
     player.secondary = BULLET_PLAYER_SPRAY;
     
-    player.hudScore = Game.add.text(16, 16, "Score: " + player.score, { fontSize: '32px', fill: '#FFFFFF' });
-    player.hudHealth = Game.add.text(16, 545, "Health: " + player.health, { fontSize: '32px', fill: '#AA1100' });
-    player.hudShield = Game.add.text(16, 570, "Shield: " + player.shield, { fontSize: '32px', fill: '#1111DD' });
+    player.hudScore = game.add.text(16, 16, "Score: " + player.score, { fontSize: '32px', fill: '#FFFFFF' });
+    player.hudHealth = game.add.text(16, 545, "Health: " + player.health, { fontSize: '32px', fill: '#AA1100' });
+    player.hudShield = game.add.text(16, 570, "Shield: " + player.shield, { fontSize: '32px', fill: '#1111DD' });
     
     return player;
 }

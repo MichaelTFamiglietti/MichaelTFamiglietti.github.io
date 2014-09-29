@@ -1,6 +1,6 @@
 var ENEMY_COUNT = 0;
 
-function Enemy(Game) {
+function Enemy(game) {
     this.position = { x: 0, y: 0 };
     this.velocity = { x: 0, y: 0 };
     this.cooldownPrimary = 0;
@@ -16,19 +16,19 @@ function Enemy(Game) {
     this.gettingHit = false;
     this.gettingHitTimer = 0;
 
-    this.update = function (Game, player, bullets) {
+    this.update = function () {
         
         this.travel();
         
 		// off screen check
         if(this.position.x < 0)
             this.position.x = 0;
-        if(this.position.x > Game.width)
-            this.position.x = Game.width;
+        if(this.position.x > game.width)
+            this.position.x = game.width;
         if(this.position.y < 0)
             this.position.y = 0;
-        if(this.position.y > Game.height)
-            this.position.y = Game.height;
+        if(this.position.y > game.height)
+            this.position.y = game.height;
 
 		// Set sprite position
         this.sprite.x = this.position.x;
@@ -44,7 +44,7 @@ function Enemy(Game) {
         else
         {
             this.cooldownPrimary = 0;
-            this.shoot(Game, bullets, this.primary);
+            this.shoot(this.primary);
         }
         
         // Look at player
@@ -80,7 +80,7 @@ function Enemy(Game) {
         
     }
     
-    this.shoot = function (Game, bullets, flyweight) {
+    this.shoot = function (flyweight) {
         for(var i = 0; i < flyweight.bullets; ++i) {
             var radians = (Math.random() * (flyweight.range*2)-flyweight.range) * (Math.PI/180);
             var dir = {x: 0, y: 0};
@@ -91,13 +91,13 @@ function Enemy(Game) {
             pos.x += dir.x;
             pos.y += dir.y;
             
-            bullets.push(CreateBullet( Game, flyweight, pos, dir ));
+            bullets.push(CreateBullet( flyweight, pos, dir ));
         }
     }
 }
 
-function CreateEnemyWeak(Game, playerPos) {
-    var enemy = new Enemy(Game);
+function CreateEnemyWeak(playerPos) {
+    var enemy = new Enemy(game);
     var position = {x: 0, y: 0};
     while(true){
         position.x = Math.random() * screenWidth;
@@ -105,7 +105,7 @@ function CreateEnemyWeak(Game, playerPos) {
         if( Math.abs(position.x - playerPos.x) > 100 && Math.abs(position.y - playerPos.y) > 100 )
             break;
     }
-    enemy.sprite = Game.add.sprite(position.x, position.y, 'enemy');
+    enemy.sprite = game.add.sprite(position.x, position.y, 'enemy');
     enemy.sprite.anchor.setTo(0.5, 0.5);
     enemy.position = enemy.sprite.position;
     enemy.radius = 15;

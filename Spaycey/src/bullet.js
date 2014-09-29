@@ -96,14 +96,14 @@ function BulletFlyweight(radius, damageMin, damageMax, firerate, speed, bullets,
 
 
 var globalVortexBool = false;
-function CreateBullet(Game, flyweight, position, dir) {
+function CreateBullet(flyweight, position, dir) {
     var bullet = new Bullet();
     bullet.flyweight = flyweight;
     bullet.direction.x = dir.x;
     bullet.direction.y = dir.y;
     bullet.position.x = position.x;
     bullet.position.y = position.y;
-    bullet.sprite = Game.add.sprite(position.x, position.y, flyweight.bulletTag);
+    bullet.sprite = game.add.sprite(position.x, position.y, flyweight.bulletTag);
     bullet.sprite.rotation = Math.atan2(dir.y, dir.x);
     bullet.sprite.anchor.setTo(0.5, 0.5);
     bullet.damage = Math.round(Math.random() * (flyweight.damageMax-flyweight.damageMin) + flyweight.damageMin);
