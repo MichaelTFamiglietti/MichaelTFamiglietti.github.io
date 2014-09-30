@@ -37,8 +37,9 @@ function Bullet() {
            return true;
         }
     };
+
     this.swarm = function() {
-    this.sprite.angle += Math.PI * deltaTime; 
+        this.sprite.angle += Math.PI * deltaTime; 
         this.swarmTime +=  deltaTime;
         this.swarmLife -= deltaTime;
         if(this.swarmTime >= .4) {
@@ -55,18 +56,15 @@ function Bullet() {
     }
     
     this.vortex = function() {
-        var angle = Math.atan2(this.direction.y, this.direction.x);
-        if(this.vortexBool) {
-            angle -= Math.PI/2;
+        var offset;
+        if (this.vortexBool) {
+            offset = Math.PI / 2;
         }
         else {
-            angle += Math.PI/2;  
+            offset = -Math.PI / 2;
         }
-        
-        var newDir = {x: 0, y: 0};
-        newDir.x = Math.cos(angle);
-        newDir.y = Math.sin(angle);
-        
+
+        var newDir = rotateVector(this.direction, offset);
         var xInc = newDir.x * this.flyweight.speed/2* (this.flyweight.wobble/20)* deltaTime;
         var yInc = newDir.y * this.flyweight.speed/2* (this.flyweight.wobble/20)* deltaTime;
         this.vortexAmt += Math.abs(xInc) + Math.abs(yInc);

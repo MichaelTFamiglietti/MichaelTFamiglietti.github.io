@@ -15,6 +15,8 @@ function Enemy(game) {
     
     this.gettingHit = false;
     this.gettingHitTimer = 0;
+    
+    this.waypoint = { x: 0, y: 0 };
 
     this.update = function () {
         
@@ -49,7 +51,7 @@ function Enemy(game) {
         
         // Look at player
         // TODO make turn to
-        this.sprite.rotation = Math.atan2(relativePlayerPos.y, relativePlayerPos.x);
+       // this.sprite.rotation = Math.atan2(relativePlayerPos.y, relativePlayerPos.x);
         
         // check if being hit
         if(this.gettingHit){
@@ -77,7 +79,22 @@ function Enemy(game) {
     };
     
     this.travel = function() {
-        
+        if(getDistance(this.position, this.waypoint) < 50) {
+            this.waypoint = { x: Math.random() * screenWidth, y: Math.random() * screenHeight };
+        }
+        var direction = { x: Math.cos(this.sprite.rotation), y: Math.sin(this.sprite.rotation) };
+        var difference = { x: this.waypoint.x - this.position.x, y: this.waypoint.y - this.position.y };
+        difference = normalize(difference);
+        var dotResult = dot(rotateVector(direction, Math.PI / -2), difference);
+        if (dotResult < -.001) {
+            this.sprite.rotation += 1 * deltaTime;
+        }
+        else if (dotResult > .001) {
+            this.sprite.rotation -= 1 * deltaTime;
+        }
+
+        this.position.x += direction.x * deltaTime * this.speed;
+        this.position.y += direction.y * deltaTime * this.speed;
     }
     
     this.shoot = function (flyweight) {
@@ -85,9 +102,9 @@ function Enemy(game) {
             var radians = (Math.random() * (flyweight.range*2)-flyweight.range) * (Math.PI/180);
             var dir = {x: 0, y: 0};
             var pos = this.position;
-            
-            dir.x = Math.cos(this.sprite.rotation + radians);
-            dir.y = Math.sin(this.sprite.rotation + radians);
+            var angle = Math.atan2(player.position.y - this.position.y, player.position.x - this.position.x);
+            dir.x = Math.cos(angle + radians);
+            dir.y = Math.sin(angle + radians);
             pos.x += dir.x;
             pos.y += dir.y;
             
@@ -109,11 +126,12 @@ function CreateEnemyWeak(playerPos) {
     enemy.sprite.anchor.setTo(0.5, 0.5);
     enemy.position = enemy.sprite.position;
     enemy.radius = 15;
-    enemy.speed = 500;
+    enemy.speed = 100;
     enemy.health = 100;
     enemy.score = 50;
     enemy.primary = BULLET_ENEMY_WEAK;
     enemy.shieldBonus = 1;
+    enemy.waypoint = { x: Math.random() * screenWidth, y: Math.random() * screenHeight };
     
     ENEMY_COUNT++;
     return enemy;

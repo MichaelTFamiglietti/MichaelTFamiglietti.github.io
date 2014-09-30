@@ -39,7 +39,7 @@ function preload() {
     load();
     
     // setup flyweights
-    BULLET_ENEMY_WEAK               = new BulletFlyweight(5, 5, 10, .8, 300, 1, 2, 0, 0, "BulletEnemyWeak", "bulletEnemy" );
+    BULLET_ENEMY_WEAK               = new BulletFlyweight(5, 8, 17, .8, 300, 1, 2, 0, 0, "BulletEnemyWeak", "bulletEnemy" );
     BULLET_PLAYER_HIGH_PRECISION    = new BulletFlyweight(10, 40, 55, .05, 1000, 1, 0, 0, 10, "BulletPlayerHighPrecision", "bulletPlayer"  );
     BULLET_PLAYER_SPREAD_SHOT       = new BulletFlyweight(10, 20, 30, .33, 520, 10, 4, 0, 7, "BulletPlayerSpreadShot", "bulletPlayer"  );
     BULLET_PLAYER_DOUBLE_SHOT       = new BulletFlyweight(12, 30, 45, .2, 750, 2, 4, 0, 6, "BulletPlayerDoubleShot", "bulletPlayer" );
@@ -49,7 +49,7 @@ function preload() {
     BULLET_PLAYER_VORTEX            = new BulletFlyweight(10, 5, 10, .03, 500, 2, 0, 25, 5, "BulletPlayerVortex", "bulletPlayer");
     BULLET_PLAYER_ZAP               = new BulletFlyweight(10, 15, 25, .1, 900, 4, 0, 50, 5, "BulletPlayerZap", "bulletPlayer");
     BULLET_PLAYER_SPRAY             = new BulletFlyweight(10, 20, 35, .07, 400, 4, 30, 0, 8, "BulletPlayerSpray", "bulletPlayer" );
-    BULLET_PLAYER_SWARM             = new BulletFlyweight(10, 20, 40, .1, 600, 10, 360, 20, 5, "BulletPlayerSwarm", "bulletPlayer" );
+    BULLET_PLAYER_SWARM             = new BulletFlyweight(10, 20, 40, .1, 500, 5, 300, 20, 5, "BulletPlayerSwarm", "bulletPlayer" );
     Guns = [BULLET_PLAYER_HIGH_PRECISION, BULLET_PLAYER_SPREAD_SHOT, 
             BULLET_PLAYER_DOUBLE_SHOT, BULLET_PLAYER_SEMIWIDE_SHOT, BULLET_PLAYER_WIDE_SHOT, 
             BULLET_PLAYER_360_SHOT, BULLET_PLAYER_VORTEX, BULLET_PLAYER_ZAP, BULLET_PLAYER_SPRAY, BULLET_PLAYER_SWARM ];
@@ -69,6 +69,31 @@ function colliding(entity1, entity2) {
     else {
         return false;
     }
+}
+
+function getDistance(pos1, pos2) {
+    var difference = { x: pos1.x - pos2.x, y: pos1.y - pos2.y };
+    var distance = Math.sqrt(difference.x * difference.x + difference.y * difference.y);
+    return distance;
+}
+
+function rotateVector(vector, rotateAmount) {
+    var result = { x: 0, y: 0 };
+    var angle = Math.atan2(vector.y, vector.x);
+    angle += rotateAmount;
+    result.x = Math.cos(angle);
+    result.y = Math.sin(angle);
+    return result;
+}
+
+function dot(vector1, vector2) {
+    return vector1.x * vector2.x + vector1.y * vector2.y;
+}
+
+function normalize(vector) {
+    var mag = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    var result = { x: vector.x / mag, y: vector.y / mag };
+    return result;
 }
 
 function update() {
