@@ -67,6 +67,8 @@
             game.load.image('bulletPlayer', 'res/BulletPlayer.png');
             game.load.image('bulletEnemy', 'res/BulletEnemy.png');
 
+            var text = game.add.text(250, 200, "Loading...", { fontSize: '32px', fill: '#FFFFFF', align: 'center' });
+
             game.load.audio('bg', 'res/Music/Never-Sit-Still.wav');
             music = game.add.audio('bg');
             music.play(0, 0, 1, true, true);
@@ -82,6 +84,8 @@
             for(var i = 0; i < GunStrings.length; ++i) {
                 game.load.image(GunStrings[i], "res/Icons/GunIcon" + i + ".png");
             }
+
+            text.destroy();
         }
     </script>
 	
