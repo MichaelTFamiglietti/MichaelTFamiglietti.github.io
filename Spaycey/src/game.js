@@ -32,8 +32,8 @@ var deltaTime = 0;
 var loseText = null;
 var music = null;
 var shot = null;
-var impact = null;
-var death = null;
+//var impact = null;
+//var death = null;
 
 var playerWeaponInt1 = 0, playerWeaponInt2 = 1;
 var playerWeapon1 = null, playerWeapon2 = null;

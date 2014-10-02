@@ -31,9 +31,9 @@ function Bullet() {
         if(this.flagHit == true||this.position.x + this.flyweight.radius < -50 || this.position.x - this.flyweight.radius > screenWidth  + 50||
            this.position.y + this.flyweight.radius < -50 || this.position.y - this.flyweight.radius > screenHeight + 50 ) {
             BULLET_COUNT--;
-            if (!muteShots) {
-                impact.play(0, 0, 1, false, true);
-            }
+          //  if (!muteShots) {
+          //      impact.play(0, 0, 1, false, true);
+          //  }
             return false;
         }
         else {
