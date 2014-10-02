@@ -41,6 +41,7 @@ var playerWeapon1 = null, playerWeapon2 = null;
 function preload() {
     dout = document.getElementById('debug');
     load();
+	dout.innerHTML = " ";
     
     // setup flyweights
     BULLET_ENEMY_WEAK               = new BulletFlyweight(5, 8, 17, .8, 300, 1, 2, 0, 0, "BulletEnemyWeak", "bulletEnemy" );
