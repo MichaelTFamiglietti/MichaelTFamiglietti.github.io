@@ -68,7 +68,7 @@
             game.load.image('bulletEnemy', 'res/BulletEnemy.png');
 
             var text = game.add.text(250, 200, "Loading...", { fontSize: '32px', fill: '#FFFFFF', align: 'center' });
-
+			text.update();
             game.load.audio('bg', 'res/Music/Never-Sit-Still.wav');
             music = game.add.audio('bg');
             music.play(0, 0, 1, true, true);

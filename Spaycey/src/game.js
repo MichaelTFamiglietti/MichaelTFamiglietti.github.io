@@ -168,9 +168,9 @@ function update() {
             }
         }
     }
-    dout.innerHTML = "FPS: " + game.time.fps + 
-    "<br />Bullets: " + BULLET_COUNT + 
-    "<br />Enemies: " + ENEMY_COUNT;
+ //   dout.innerHTML = "FPS: " + game.time.fps + 
+ //   "<br />Bullets: " + BULLET_COUNT + 
+ //   "<br />Enemies: " + ENEMY_COUNT;
 }
 var enemySpawnRate = 0.6;
 var lastMutedM = false;
