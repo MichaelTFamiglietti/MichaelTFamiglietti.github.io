@@ -30,6 +30,10 @@ var restCooldown = 0;
 var spawnEnemyCooldown = 0;
 var deltaTime = 0;
 var loseText = null;
+var music = null;
+var shot = null;
+var impact = null;
+var death = null;
 
 var playerWeaponInt1 = 0, playerWeaponInt2 = 1;
 var playerWeapon1 = null, playerWeapon2 = null;
@@ -43,9 +47,9 @@ function preload() {
     BULLET_PLAYER_HIGH_PRECISION    = new BulletFlyweight(10, 40, 55, .05, 1000, 1, 0, 0, 10, "BulletPlayerHighPrecision", "bulletPlayer"  );
     BULLET_PLAYER_SPREAD_SHOT       = new BulletFlyweight(10, 20, 30, .33, 520, 10, 4, 0, 7, "BulletPlayerSpreadShot", "bulletPlayer"  );
     BULLET_PLAYER_DOUBLE_SHOT       = new BulletFlyweight(12, 30, 45, .2, 750, 2, 4, 0, 6, "BulletPlayerDoubleShot", "bulletPlayer" );
-    BULLET_PLAYER_SEMIWIDE_SHOT     = new BulletFlyweight(10, 20, 30,  1, 500, 35, 45, 0, 5, "BulletPlayerSemiWideShot", "bulletPlayer");
-    BULLET_PLAYER_WIDE_SHOT         = new BulletFlyweight(10, 20, 30,  1, 500, 60, 90, 0, 5, "BulletPlayerWideShot", "bulletPlayer");
-    BULLET_PLAYER_360_SHOT          = new BulletFlyweight(10, 30, 40, 1.15, 300, 100, 180, 0, 4, "BulletPlayer360Shot", "bulletPlayer");
+    BULLET_PLAYER_SEMIWIDE_SHOT     = new BulletFlyweight(10, 17, 23,  1, 550, 35, 45, 0, 5, "BulletPlayerSemiWideShot", "bulletPlayer");
+    BULLET_PLAYER_WIDE_SHOT         = new BulletFlyweight(10, 15, 25,  1, 500, 60, 90, 0, 5, "BulletPlayerWideShot", "bulletPlayer");
+    BULLET_PLAYER_360_SHOT          = new BulletFlyweight(10, 20, 30, 1.15, 300, 90, 180, 0, 4, "BulletPlayer360Shot", "bulletPlayer");
     BULLET_PLAYER_VORTEX            = new BulletFlyweight(10, 5, 10, .03, 500, 2, 0, 25, 5, "BulletPlayerVortex", "bulletPlayer");
     BULLET_PLAYER_ZAP               = new BulletFlyweight(10, 15, 25, .1, 900, 4, 0, 50, 5, "BulletPlayerZap", "bulletPlayer");
     BULLET_PLAYER_SPRAY             = new BulletFlyweight(10, 20, 35, .07, 400, 4, 30, 0, 8, "BulletPlayerSpray", "bulletPlayer" );
@@ -169,7 +173,30 @@ function update() {
     "<br />Enemies: " + ENEMY_COUNT;
 }
 var enemySpawnRate = 0.6;
+var lastMutedM = false;
+var lastMutedN = false;
+var muteShots = false;
 function UpdateGameMode() {
+    if (game.input.keyboard.isDown(Phaser.Keyboard.M )) {
+        if (lastMutedM == false) {
+            lastMutedM = true;
+            music.mute = !music.mute;
+        }
+    }
+    else {
+        lastMutedM = false;
+    }
+
+    if (game.input.keyboard.isDown(Phaser.Keyboard.N)) {
+        if (lastMutedN == false) {
+            lastMutedN = true;
+            muteShots = !muteShots;
+        }
+    }
+    else {
+        lastMutedN = false;
+    }
+
     // Create enemy on input
     if(roundStarted == false && game.input.keyboard.isDown(Phaser.Keyboard.ENTER) && enemiesToSpawn == 0) {
         levelText = game.add.text(780, 16, 1, { fontSize: '32px', fill: '#FFFFFF', align: 'right' });
@@ -257,8 +284,8 @@ function NextLevel() {
     enemiesSpawned = 0;
     restCooldown = 0;
     // increment the enemies to spawn
-    ++enemiesToSpawn;
-    ++level;
+    enemiesToSpawn += 2;
+    level += 1;
     roundStarted = true;
     
     levelText.setText(level);
@@ -272,6 +299,7 @@ function NextLevel() {
 }
 
 function Restart() {
+    music.play(0, 0, 1, true, true);
     enemiesToSpawn = 0;
     player.health = 100;
     player.shield = 100;

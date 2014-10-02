@@ -72,6 +72,9 @@ function Enemy(game) {
         {
             player.addScore(this.score);
             player.addShield(this.shieldBonus);
+            if (!muteShots) {
+                death.play(0, 0, 1, false, true);
+            }
             ENEMY_COUNT--;
             return false;
         }
@@ -109,6 +112,9 @@ function Enemy(game) {
             pos.y += dir.y;
             
             bullets.push(CreateBullet( flyweight, pos, dir ));
+        }
+        if (!muteShots) {
+            shot.play(0, 0, 1, false, true);
         }
     }
 }

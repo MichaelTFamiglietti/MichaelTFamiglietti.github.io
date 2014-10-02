@@ -90,6 +90,9 @@ function Player(game) {
             
             bullets.push(CreateBullet( flyweight, pos, dir ));
         }
+        if (!muteShots) {
+            shot.play(0, 0, 1, false, true);
+        }
     };
     
     this.addScore = function (amount) {

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     <meta charset='utf-8'>
@@ -30,11 +30,6 @@
 		<section id="main_content">
         
             <h3>Spaycey</h3>
-            <p> Developed by: Michael Taylor Famiglietti<br />
-                **** NOTICE ****<br />
-                Current game state is in heavy development.
-            </p>
-
             <table id="table">
                 <tr>
                     <td id='game_bind' />
@@ -46,7 +41,9 @@
                             Q E - Switch Weapons<br /><br />
                             L - Click - Primary<br /><br />
                             R - Click - Secondary<br /><br />
-                            Enter - Start Game
+                            Enter - Start Game<br /><br />
+                            Mute Music - M<br /><br />
+                            Mute Effects - N
                         </p>
                     </td>
                 </tr>
@@ -69,6 +66,18 @@
             game.load.image('enemy', 'res/Enemy.png');
             game.load.image('bulletPlayer', 'res/BulletPlayer.png');
             game.load.image('bulletEnemy', 'res/BulletEnemy.png');
+
+            game.load.audio('bg', 'res/Music/Never-Sit-Still.wav');
+            music = game.add.audio('bg');
+            music.play(0, 0, 1, true, true);
+            game.load.audio('shot', 'res/Music/Shot.wav');
+            shot = game.add.audio('shot');
+
+            game.load.audio('impact', 'Impact.mp3');
+            game.load.audio('death', 'Death.mp3');
+
+            impact = game.add.audio('impact');
+            death = game.add.audio('death');
             
             for(var i = 0; i < GunStrings.length; ++i) {
                 game.load.image(GunStrings[i], "res/Icons/GunIcon" + i + ".png");
