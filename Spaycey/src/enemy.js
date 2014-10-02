@@ -72,8 +72,8 @@ function Enemy(game) {
         {
             player.addScore(this.score);
             player.addShield(this.shieldBonus);
-            if (!muteShots) {
-                death.play(0, 0, 1, false, true);
+           // if (!muteShots) {
+           //     death.play(0, 0, 1, false, true);
             }
             ENEMY_COUNT--;
             return false;
